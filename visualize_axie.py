@@ -228,12 +228,3 @@ def update_figure(selected_fuel):
 if __name__ == '__main__':
     app.run_server(debug=True, host='127.0.0.1', port=3001)
 
-
-
-
-
-
-plt.scatter(date_time_obj, prices)
-plt.xticks(rotation=90)
-plt.xlim(min(date_time_obj), max(date_time_obj))
-plt.show()
