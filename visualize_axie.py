@@ -68,80 +68,27 @@ app.layout = html.Div(
 						html.Div(
 							className="four columns div-model-inputs",
 							children=[
-									html.H3('Where to Build Hydrogen Fueling Stations'),
+									html.H3('Axie Infinity Price Tracker'),
 									html.P(
-										'We have developed a model that optimizes truck refueling centers based on the '
-										'top 4674 routes in the US. You can choose which companies you would like to work '
-										'with, along with the metrics that are most important to your decision.', 
+										'I pull the price of 4 filters of Axie every half hour', 
 										style={}
 									),
 									html.Br(),
 									html.P([
-											html.Strong('Number of Routes: '),
-											'How many routes are enabled and supported by a station', html.Br(),
-											html.Strong('Value of Goods: '),
-											'Monetary value of the cargo transported along the route', html.Br(),
-											html.Strong('Popularity of Route: '),
-											'How much tonnage moves across the route', html.Br()
+											html.Strong('Plant: '),
+											'FILTERS', html.Br(),
+											html.Strong('Aqua: '),
+											'FILTERS', html.Br(),
+											html.Strong('Beast: '),
+											'FILTERS', html.Br(),
+											html.Strong('Bird: '),
+											'FILTERS', html.Br()
 										], 
 										style={}
 									),
 									html.Hr(className='hr-divider'),
-									html.H6('How many stations would you like to build?'),
-
-									html.Div(
-										className="div-num-stations",
-										children=[
-												dcc.Input(
-													id='nstations',
-													placeholder='How many stations?',
-													type='number',
-													value=5
-												),
-										]
-									),
-
-									html.H6('What metric should be used to select stations?'),
-
-									html.Div(
-										className="div-entries",
-										children=[
-												dcc.RadioItems(
-													className="radio-entry",
-													id='metric',
-													options=PARAMETER_OPTIONS,
-													value='Number of Routes',
-													labelStyle={
-														'display': 'inline-block',
-														'textAlign': 'center',
-														'paddingLeft': '6px',
-														'paddingRight': '6px',
-													}
-												),
-										]
-									),
-
-									html.H6('What metric should determine the station icon size?'),
 									
-									html.Div(
-											className="div-entries",
-											children=[
-													dcc.RadioItems(
-														className="radio-entry",
-														id='sec_metric',
-														options=PARAMETER_OPTIONS,
-														value='Number of Routes',
-														labelStyle={
-															'display': 'inline-block',
-															'textAlign': 'center',
-															'paddingLeft': '6px',
-															'paddingRight': '6px',
-														}
-													),
-											]
-									),
-									
-									html.H6('Owner of Trucking Stations'),
+									html.H6('What Axie would you like to track?'),
 									
 									html.Div(
 											className="div-station-companies",
