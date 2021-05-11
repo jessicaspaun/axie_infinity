@@ -16,10 +16,10 @@ external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
 # Read Data
-aqua = pd.read_csv('aqua_master - Copy.csv')
-plant = pd.read_csv('plant_master - Copy.csv')
-beast = pd.read_csv('beast_master - Copy.csv')
-bird = pd.read_csv('bird_master - Copy.csv')
+aqua = pd.read_csv('data/aqua_master.csv')
+plant = pd.read_csv('data/plant_master.csv')
+beast = pd.read_csv('data/beast_master.csv')
+bird = pd.read_csv('data/bird_master.csv')
 
 aqua['type'] = 'aqua'
 plant['type'] = 'plant'
@@ -179,7 +179,7 @@ app.layout = html.Div(
 			className="row",
 			children=[
 					html.Div(
-						className="one-third column app__left__section",
+						className="two-thirds column app__left__section",
 						children=[
 								# TODO: Need to link this to a download function
 								dcc.Graph(
