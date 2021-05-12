@@ -59,7 +59,7 @@ def get_price(driver):
 			box_html = box.get_attribute('innerHTML')
 			soup = BeautifulSoup(box_html)
 			for d in soup.findAll('h6',attrs={'class':'truncate ml-8 text-gray-1 font-medium'}):
-				price_list.append(d.get_text().replace('$','').replace(',',''))
+				price_list.append(float(d.get_text().replace('$','').replace(',','')))
 		median = np.median(price_list)
 		max_ = np.max(price_list)
 		min_ = np.min(price_list)
@@ -96,8 +96,8 @@ def main():
 	print('finished')
 
 if __name__ == "__main__":
-	scheduler = BlockingScheduler()
-	scheduler.add_job(main, 'interval', hours=.5)
-	scheduler.start()
-	# main()
+	# scheduler = BlockingScheduler()
+	# scheduler.add_job(main, 'interval', hours=.5)
+	# scheduler.start()
+	main()
 
