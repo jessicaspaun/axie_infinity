@@ -110,17 +110,18 @@ app.layout = html.Div(
 													)		
 											]
 									),
-									html.Div(
+			
+							]
+						),
+						html.Div(
 										className="eight columns div-map",
 										children=[
 											dcc.Graph(
-												id='median',
+												id='map_v2',
 												figure={},
 											)
 									]
-								),			
-							]
-						),
+								),
 				]
 		),
 
@@ -135,15 +136,36 @@ app.layout = html.Div(
 			className="row",
 			children=[
 					html.Div(
-						className="two-thirds column app__left__section",
+						className="one-third column app__left__section",
 						children=[
 								# TODO: Need to link this to a download function
 								dcc.Graph(
-									id='map_v2',
+									id='median',
 									figure={}
 								),
 						],
-					)
+					),
+					html.Div(
+						className="one-third column app__center__section",
+						children=[
+								# TODO: Need to link this to a download function
+								dcc.Graph(
+									id='max',
+									figure={}
+								),
+						]
+					),
+
+					html.Div(
+						className="one-third column app__right__section",
+						children=[
+							# TODO: Need to link this to a download function
+							dcc.Graph(
+								id='min',
+								figure={}
+							),
+						]
+					),
 			]
 		)
 	]
@@ -153,7 +175,9 @@ app.layout = html.Div(
 @app.callback(
     [
         Output('median', 'figure')
-        ,Output('map_v2', 'figure')
+        ,Output('map_v2', 'figure'),
+        Output('max','figure'),
+        Output('min','figure')
     ],
     [
         Input('company', 'value')
@@ -183,9 +207,25 @@ def update_figure(selected_fuel):
 			color='type', 
 			color_discrete_map={'bird': 'red', 'aqua': 'blue', "plant": 'green', 'beast': 'orange'}
 		)
+		max_plot = px.line(
+			df_sub,
+			title='Axie Max Prices',
+			x='date',
+			y='max',
+			color='type',
+			color_discrete_map={'bird': 'red', 'aqua': 'blue', "plant": 'green', 'beast': 'orange'}
+		)
+		min_plot = px.line(
+			df_sub,
+			title='Axie Min Prices',
+			x='date',
+			y='min',
+			color='type',
+			color_discrete_map={'bird': 'red', 'aqua': 'blue', "plant": 'green', 'beast': 'orange'}
+		)
 
 
-		figures = [med_plot, pri_plot]
+		figures = [med_plot, pri_plot, max_plot, min_plot]
 		[fig_.update_layout(paper_bgcolor='#879085', plot_bgcolor='#879085') for fig_ in figures]
 		return figures
 
