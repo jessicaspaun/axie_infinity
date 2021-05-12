@@ -15,7 +15,7 @@ import datetime
 
 
 # Create driver
-def create_driver(path='C:/Users/JSPAUN/Downloads/chromedriver_win32/chromedriver.exe', url='https://axieinfinity.com/'):
+def create_driver(path='C:/Users/srdes/Desktop/Axie_Infinity/chromedriver_win32/chromedriver.exe', url='https://axieinfinity.com/'):
 	chrome_options = webdriver.ChromeOptions()
 	chrome_options.add_argument("--disable-blink-features=AutomationControlled")
 
@@ -57,7 +57,7 @@ def get_price(driver):
 		price_list = []
 		for box in axie_box:
 			box_html = box.get_attribute('innerHTML')
-			soup = BeautifulSoup(box_html, "lxml")
+			soup = BeautifulSoup(box_html)
 			for d in soup.findAll('h6',attrs={'class':'truncate ml-8 text-gray-1 font-medium'}):
 				price_list.append(d.get_text())
 
@@ -83,10 +83,10 @@ def get_price(driver):
 	return driver
 
 def main():
-	print('starting'+ str(datetime.datetime.now()))
+	print('starting '+ str(datetime.datetime.now()))
 	
 
-	driver = create_driver(path='C:/Users/JSPAUN/Downloads/chromedriver_win32/chromedriver.exe', url='https://axieinfinity.com/')
+	driver = create_driver(path='C:/Users/srdes/Desktop/Axie_Infinity/chromedriver_win32/chromedriver.exe', url='https://axieinfinity.com/')
 	driver = open_marketplace(driver)
 	driver = get_price(driver)
 	driver.quit()
