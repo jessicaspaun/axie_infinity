@@ -59,11 +59,14 @@ def get_price(driver):
 			box_html = box.get_attribute('innerHTML')
 			soup = BeautifulSoup(box_html)
 			for d in soup.findAll('h6',attrs={'class':'truncate ml-8 text-gray-1 font-medium'}):
-				price_list.append(d.get_text())
+				price_list.append(d.get_text().replace('$','').replace(',',''))
+		median = np.median(price_list)
+		max_ = np.max(price_list)
+		min_ = np.min(price_list)
 
 		date_col = [datetime.datetime.now().strftime("%Y%m%d-%H%M")] * len(price_list)
 		
-		df = {'price':price_list, 'date':date_col}
+		df = {'price':price_list, 'date':date_col, 'min':min_,'max':max_,'median':median}
 
 		# print(df)
 
