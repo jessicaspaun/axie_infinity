@@ -109,7 +109,16 @@ app.layout = html.Div(
 														}
 													)		
 											]
-									),			
+									),
+									html.Div(
+										className="eight columns div-map",
+										children=[
+											dcc.Graph(
+												id='median',
+												figure={},
+											)
+									]
+								),			
 							]
 						),
 				]
@@ -143,7 +152,8 @@ app.layout = html.Div(
 
 @app.callback(
     [
-        Output('map_v2', 'figure')
+        Output('median', 'figure')
+        ,Output('map_v2', 'figure')
     ],
     [
         Input('company', 'value')
@@ -157,6 +167,14 @@ def update_figure(selected_fuel):
 		# https://en.wikipedia.org/wiki/Feature_scaling#Rescaling_(min-max_normalization)
 		A = 0.05
 		B = .5
+		med_plot = px.line(
+			df_sub,
+			title='Axie Median Prices',
+			x='date',
+			y='median',
+			color='type',
+			color_discrete_map={'bird': 'red', 'aqua': 'blue', "plant": 'green', 'beast': 'orange'}
+		)
 		pri_plot = px.scatter(
 			df_sub, 
 			title='Axie Prices',
@@ -167,7 +185,7 @@ def update_figure(selected_fuel):
 		)
 
 
-		figures = [pri_plot]
+		figures = [med_plot, pri_plot]
 		[fig_.update_layout(paper_bgcolor='#879085', plot_bgcolor='#879085') for fig_ in figures]
 		return figures
 
