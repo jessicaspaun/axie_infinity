@@ -39,49 +39,24 @@ def open_marketplace(driver):
 
 	return driver
 
-def get_price(driver):
+def get_price(driver, url):
 
-	# Pull filters
-	pull_dict = {
-	'plant':'https://marketplace.axieinfinity.com/axie?part=tail-carrot&part=mouth-serious&part=horn-cactus&part=back-pumpkin&pureness=6',
-	'bird':'https://marketplace.axieinfinity.com/axie?part=back-raven&part=mouth-hungry-bird&part=horn-kestrel&part=tail-post-fight&pureness=6',
-	'beast':'https://marketplace.axieinfinity.com/axie?part=back-ronin&part=mouth-goda&part=horn-imp&part=tail-cottontail&pureness=6',
-	'aqua':'https://marketplace.axieinfinity.com/axie?part=back-goldfish&part=mouth-risky-fish&part=horn-shoal-star&part=tail-navaga&pureness=6'
-	}
+	driver.get(url)
+	time.sleep(10) # Loading page
+	axie_box = driver.find_elements_by_class_name('axie-card')
+	price_list = []
+	for box in axie_box:
+		box_html = box.get_attribute('innerHTML')
+		soup = BeautifulSoup(box_html)
+		for d in soup.findAll('h6',attrs={'class':'truncate ml-8 text-gray-1 font-medium'}):
+			price_list.append(float(d.get_text().replace('$','').replace(',','')))
+	median = np.median(price_list)
+	max_ = np.max(price_list)
+	min_ = np.min(price_list)
 
-	for key in pull_dict:
-		url = pull_dict[key]
-		driver.get(url)
-		time.sleep(10) # Loading page
-		axie_box = driver.find_elements_by_class_name('axie-card')
-		price_list = []
-		for box in axie_box:
-			box_html = box.get_attribute('innerHTML')
-			soup = BeautifulSoup(box_html)
-			for d in soup.findAll('h6',attrs={'class':'truncate ml-8 text-gray-1 font-medium'}):
-				price_list.append(float(d.get_text().replace('$','').replace(',','')))
-		median = np.median(price_list)
-		max_ = np.max(price_list)
-		min_ = np.min(price_list)
-
-		date_col = [datetime.datetime.now().strftime("%Y%m%d-%H%M")] * len(price_list)
-		
-		df = {'price':price_list, 'date':date_col, 'min':min_,'max':max_,'median':median}
-
-		# print(df)
-
-		# pd.DataFrame(df).to_csv(str(key)+'_'+str(datetime.datetime.now().strftime("%Y%m%d-%H%M"))+'.csv')
-
-		df_master = pd.read_csv('data/'+key+'_master.csv')
+	return price_list, min_, max_, median
 
 
-		df_new = pd.DataFrame(df)
-
-
-		df_master = df_master.append(df_new, ignore_index=True)
-
-
-		df_master.to_csv('data/'+key+'_master.csv',index=False)
 
 	return driver
 
@@ -91,13 +66,35 @@ def main():
 
 	driver = create_driver(path='C:/Users/srdes/Desktop/Axie_Infinity/chromedriver_win32/chromedriver.exe', url='https://axieinfinity.com/')
 	driver = open_marketplace(driver)
-	driver = get_price(driver)
+
+		# Pull filters
+	pull_dict = {
+	'plant':'https://marketplace.axieinfinity.com/axie?part=tail-carrot&part=mouth-serious&part=horn-cactus&part=back-pumpkin&pureness=6',
+	'bird':'https://marketplace.axieinfinity.com/axie?part=back-raven&part=mouth-hungry-bird&part=horn-kestrel&part=tail-post-fight&pureness=6',
+	'beast':'https://marketplace.axieinfinity.com/axie?part=back-ronin&part=mouth-goda&part=horn-imp&part=tail-cottontail&pureness=6',
+	'aqua':'https://marketplace.axieinfinity.com/axie?part=back-goldfish&part=mouth-risky-fish&part=horn-shoal-star&part=tail-navaga&pureness=6'
+	}
+
+	for key in pull_dict:
+		url = pull_dict[key]
+
+		price_list, min_, max_, median = get_price(driver, url)
+
+		date_col = [datetime.datetime.now().strftime("%Y%m%d-%H%M")] * len(price_list)
+		
+		df = {'price':price_list, 'date':date_col, 'min':min_,'max':max_,'median':median}
+
+		df_master = pd.read_csv('data/'+key+'_master.csv')
+		df_new = pd.DataFrame(df)
+		df_master = df_master.append(df_new, ignore_index=True)
+		df_master.to_csv('data/'+key+'_master.csv',index=False)
+
 	driver.quit()
 	print('finished')
 
 if __name__ == "__main__":
 	# scheduler = BlockingScheduler()
-	# scheduler.add_job(main, 'interval', hours=.5)
+	# scheduler.add_job(main, 'interval', hours=.25)
 	# scheduler.start()
 	main()
 
