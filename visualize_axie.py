@@ -28,7 +28,7 @@ bird['type'] = 'bird'
 
 df = aqua.append(plant).append(beast).append(bird)
 
-df['prices'] = [float(x.strip('$').replace(',','')) for x in df['price']]
+df['prices'] = [float(x.replace('$','').replace(',','')) for x in df['price']]
 date= [x.split('-') for x in df['date']]
 x_axis = []
 for i in date:

@@ -93,8 +93,8 @@ def main():
 	print('finished')
 
 if __name__ == "__main__":
-	# scheduler = BlockingScheduler()
-	# scheduler.add_job(main, 'interval', hours=.25)
-	# scheduler.start()
-	main()
+	scheduler = BlockingScheduler()
+	scheduler.add_job(main, 'interval', hours=.25)
+	scheduler.start()
+	# main()
 
