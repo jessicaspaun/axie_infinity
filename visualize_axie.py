@@ -123,8 +123,8 @@ app.layout = html.Div(
 												id='date-picker',
 											    month_format='MMM Do, YY',
 											    end_date_placeholder_text='MMM Do, YY',
-											    start_date=datetime(2021,5,6),
-											    end_date=datetime(2021, 5, 13)
+											    start_date=df['date'].min(),
+											    end_date=df['date'].max()
 											)  ])
 			
 							]
