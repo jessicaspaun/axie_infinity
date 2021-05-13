@@ -16,10 +16,10 @@ external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
 # Read Data
-aqua = pd.read_csv('aqua_master - Copy.csv')
-plant = pd.read_csv('plant_master - Copy.csv')
-beast = pd.read_csv('beast_master - Copy.csv')
-bird = pd.read_csv('bird_master - Copy.csv')
+aqua = pd.read_csv('data/aqua_master.csv')
+plant = pd.read_csv('data/plant_master.csv')
+beast = pd.read_csv('data/beast_master.csv')
+bird = pd.read_csv('data/bird_master.csv')
 
 aqua['type'] = 'aqua'
 plant['type'] = 'plant'
@@ -28,7 +28,7 @@ bird['type'] = 'bird'
 
 df = aqua.append(plant).append(beast).append(bird)
 
-df['prices'] = [float(x.strip('$').replace(',','')) for x in df['price']]
+df['prices'] = [float(x.replace('$','').replace(',','')) for x in df['price']]
 date= [x.split('-') for x in df['date']]
 x_axis = []
 for i in date:
@@ -68,80 +68,31 @@ app.layout = html.Div(
 						html.Div(
 							className="four columns div-model-inputs",
 							children=[
-									html.H3('Where to Build Hydrogen Fueling Stations'),
+									html.H3('Axie Infinity Price Tracker'),
 									html.P(
-										'We have developed a model that optimizes truck refueling centers based on the '
-										'top 4674 routes in the US. You can choose which companies you would like to work '
-										'with, along with the metrics that are most important to your decision.', 
+										'I pull the price of 4 filters of Axie every half hour', 
 										style={}
 									),
 									html.Br(),
 									html.P([
-											html.Strong('Number of Routes: '),
-											'How many routes are enabled and supported by a station', html.Br(),
-											html.Strong('Value of Goods: '),
-											'Monetary value of the cargo transported along the route', html.Br(),
-											html.Strong('Popularity of Route: '),
-											'How much tonnage moves across the route', html.Br()
+											html.Strong('Plant: '),
+											'Pureness: 6', html.Br(),
+											'Parts: Carrot Hammer | Vegetal Bite | Prickly Trap | October Treat', html.Br(),
+											html.Strong('Bird: '),
+											'Pureness: 6', html.Br(),
+											'Parts: Ill-omened | Insectivore | Headshot | All-out Shot', html.Br(),
+											html.Strong('Beast: '),
+											'Pureness: 6', html.Br(),
+											'Parts: Single Combat | Piercing Sound | Ivory Stab | Luna Absorb', html.Br(),
+											html.Strong('Aqua: '),
+											'Pureness: 6', html.Br(),
+											'Parts: Swift Escape | Fish Hook | Star Shuriken | Flanking Smack'
 										], 
 										style={}
 									),
 									html.Hr(className='hr-divider'),
-									html.H6('How many stations would you like to build?'),
-
-									html.Div(
-										className="div-num-stations",
-										children=[
-												dcc.Input(
-													id='nstations',
-													placeholder='How many stations?',
-													type='number',
-													value=5
-												),
-										]
-									),
-
-									html.H6('What metric should be used to select stations?'),
-
-									html.Div(
-										className="div-entries",
-										children=[
-												dcc.RadioItems(
-													className="radio-entry",
-													id='metric',
-													options=PARAMETER_OPTIONS,
-													value='Number of Routes',
-													labelStyle={
-														'display': 'inline-block',
-														'textAlign': 'center',
-														'paddingLeft': '6px',
-														'paddingRight': '6px',
-													}
-												),
-										]
-									),
-
-									html.H6('What metric should determine the station icon size?'),
 									
-									html.Div(
-											className="div-entries",
-											children=[
-													dcc.RadioItems(
-														className="radio-entry",
-														id='sec_metric',
-														options=PARAMETER_OPTIONS,
-														value='Number of Routes',
-														labelStyle={
-															'display': 'inline-block',
-															'textAlign': 'center',
-															'paddingLeft': '6px',
-															'paddingRight': '6px',
-														}
-													),
-											]
-									),
-									
-									html.H6('Owner of Trucking Stations'),
+									html.H6('What Axie would you like to track?'),
 									
 									html.Div(
 											className="div-station-companies",
@@ -162,9 +113,31 @@ app.layout = html.Div(
 														}
 													)		
 											]
-									),			
+									),
+									html.Hr(className='hr-divider'),
+									html.H6('Select Date Range to view'),
+
+									html.Div(
+										children=[
+											dcc.DatePickerRange(
+												id='date-picker',
+											    month_format='MMM Do, YY',
+											    end_date_placeholder_text='MMM Do, YY',
+											    start_date=df['date'].min(),
+											    end_date=df['date'].max()
+											)  ])
+			
 							]
 						),
+						html.Div(
+										className="eight columns div-map",
+										children=[
+											dcc.Graph(
+												id='map_v2',
+												figure={},
+											)
+									]
+								),
 				]
 		),
 
@@ -183,11 +156,32 @@ app.layout = html.Div(
 						children=[
 								# TODO: Need to link this to a download function
 								dcc.Graph(
-									id='map_v2',
+									id='median',
 									figure={}
 								),
 						],
-					)
+					),
+					html.Div(
+						className="one-third column app__center__section",
+						children=[
+								# TODO: Need to link this to a download function
+								dcc.Graph(
+									id='max',
+									figure={}
+								),
+						]
+					),
+
+					html.Div(
+						className="one-third column app__right__section",
+						children=[
+							# TODO: Need to link this to a download function
+							dcc.Graph(
+								id='min',
+								figure={}
+							),
+						]
+					),
 			]
 		)
 	]
@@ -196,20 +190,36 @@ app.layout = html.Div(
 
 @app.callback(
     [
-        Output('map_v2', 'figure')
+        Output('median', 'figure'),
+        Output('map_v2', 'figure'),
+        Output('max','figure'),
+        Output('min','figure')
     ],
     [
-        Input('company', 'value')
+        Input('company', 'value'),
+        Input('date-picker','start_date'),
+        Input('date-picker','end_date')
     ]
 )
-def update_figure(selected_fuel):
+def update_figure(selected_fuel, start_date, end_date):
 		df_sub = df[df.type.isin(selected_fuel)]
+
+		df_sub = df_sub[df_sub['date'] >= start_date]
+		df_sub = df_sub[df_sub['date'] <= end_date]
 
 		# Use Min-Max Normalization Rescaling to get a size metric for scatter plot based on the
 		# chosen secondary metric. Has been used to normalize values where [a,b] = [0.5,1]
 		# https://en.wikipedia.org/wiki/Feature_scaling#Rescaling_(min-max_normalization)
 		A = 0.05
 		B = .5
+		med_plot = px.line(
+			df_sub,
+			title='Axie Median Prices',
+			x='date',
+			y='median',
+			color='type',
+			color_discrete_map={'bird': 'red', 'aqua': 'blue', "plant": 'green', 'beast': 'orange'}
+		)
 		pri_plot = px.scatter(
 			df_sub, 
 			title='Axie Prices',
@@ -218,9 +228,25 @@ def update_figure(selected_fuel):
 			color='type', 
 			color_discrete_map={'bird': 'red', 'aqua': 'blue', "plant": 'green', 'beast': 'orange'}
 		)
+		max_plot = px.line(
+			df_sub,
+			title='Axie Max Prices',
+			x='date',
+			y='max',
+			color='type',
+			color_discrete_map={'bird': 'red', 'aqua': 'blue', "plant": 'green', 'beast': 'orange'}
+		)
+		min_plot = px.line(
+			df_sub,
+			title='Axie Min Prices',
+			x='date',
+			y='min',
+			color='type',
+			color_discrete_map={'bird': 'red', 'aqua': 'blue', "plant": 'green', 'beast': 'orange'}
+		)
 
 
-		figures = [pri_plot]
+		figures = [med_plot, pri_plot, max_plot, min_plot]
 		[fig_.update_layout(paper_bgcolor='#879085', plot_bgcolor='#879085') for fig_ in figures]
 		return figures
 
