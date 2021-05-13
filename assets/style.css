@@ -1,0 +1,44 @@
+.div-model-inputs {
+  padding-left: 40px;
+  padding-top: 30px;
+}
+
+.div-map {
+  padding-left: 10px;
+
+}
+
+.div-num-stations {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 44px;
+}
+
+.div-entries {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  text-align: center;
+}
+
+.div-station-companies {
+  padding: 4px;
+  text-align: center;
+}
+
+.radio-entry {
+  padding: 4px;
+}
+
+.row-divider {
+  vertical-align: middle;
+}
+
+body {
+  margin: 0;
+  background-color: #F2F5F6;
+}
+
+.one-third.column {
+  width: 30.6666666667%;
+  padding: 25px;
+}
