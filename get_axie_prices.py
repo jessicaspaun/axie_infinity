@@ -18,13 +18,16 @@ import datetime
 def create_driver(path='C:/Users/srdes/Desktop/Axie_Infinity/chromedriver_win32/chromedriver.exe', url='https://axieinfinity.com/'):
 	chrome_options = webdriver.ChromeOptions()
 	chrome_options.add_argument("--disable-blink-features=AutomationControlled")
-
+	# chrome_options.add_argument('headless')
+	# chrome_options.add_argument('window-size=1920x1080')
+	# chrome_options.add_argument("disable-gpu")
+	
 	driver = webdriver.Chrome(executable_path=path, options=chrome_options)  # Optional argument, if not specified will search path.
-
 	# access axie infinity
+	driver.set_window_position(-10000,0)
 	driver.get(url)
 
-	time.sleep(5) # Wait for page to load
+	# time.sleep(5) # Wait for page to load
 
 	return driver
 
@@ -93,8 +96,8 @@ def main():
 	print('finished')
 
 if __name__ == "__main__":
+	main()
 	scheduler = BlockingScheduler()
 	scheduler.add_job(main, 'interval', hours=.25)
 	scheduler.start()
-	# main()
 

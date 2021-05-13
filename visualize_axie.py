@@ -114,6 +114,18 @@ app.layout = html.Div(
 													)		
 											]
 									),
+									html.Hr(className='hr-divider'),
+									html.H6('Select Date Range to view'),
+
+									html.Div(
+										children=[
+											dcc.DatePickerRange(
+												id='date-picker',
+											    month_format='MMM Do, YY',
+											    end_date_placeholder_text='MMM Do, YY',
+											    start_date=datetime(2021,5,6),
+											    end_date=datetime(2021, 5, 13)
+											)  ])
 			
 							]
 						),
@@ -178,17 +190,22 @@ app.layout = html.Div(
 
 @app.callback(
     [
-        Output('median', 'figure')
-        ,Output('map_v2', 'figure'),
+        Output('median', 'figure'),
+        Output('map_v2', 'figure'),
         Output('max','figure'),
         Output('min','figure')
     ],
     [
-        Input('company', 'value')
+        Input('company', 'value'),
+        Input('date-picker','start_date'),
+        Input('date-picker','end_date')
     ]
 )
-def update_figure(selected_fuel):
+def update_figure(selected_fuel, start_date, end_date):
 		df_sub = df[df.type.isin(selected_fuel)]
+
+		df_sub = df_sub[df_sub['date'] >= start_date]
+		df_sub = df_sub[df_sub['date'] <= end_date]
 
 		# Use Min-Max Normalization Rescaling to get a size metric for scatter plot based on the
 		# chosen secondary metric. Has been used to normalize values where [a,b] = [0.5,1]
