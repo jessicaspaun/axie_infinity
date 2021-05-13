@@ -76,13 +76,17 @@ app.layout = html.Div(
 									html.Br(),
 									html.P([
 											html.Strong('Plant: '),
-											'FILTERS', html.Br(),
-											html.Strong('Aqua: '),
-											'FILTERS', html.Br(),
-											html.Strong('Beast: '),
-											'FILTERS', html.Br(),
+											'Pureness: 6', html.Br(),
+											'Parts: Carrot Hammer | Vegetal Bite | Prickly Trap | October Treat', html.Br(),
 											html.Strong('Bird: '),
-											'FILTERS', html.Br()
+											'Pureness: 6', html.Br(),
+											'Parts: Ill-omened | Insectivore | Headshot | All-out Shot', html.Br(),
+											html.Strong('Beast: '),
+											'Pureness: 6', html.Br(),
+											'Parts: Single Combat | Piercing Sound | Ivory Stab | Luna Absorb', html.Br(),
+											html.Strong('Aqua: '),
+											'Pureness: 6', html.Br(),
+											'Parts: Swift Escape | Fish Hook | Star Shuriken | Flanking Smack'
 										], 
 										style={}
 									),
