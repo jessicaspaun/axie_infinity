@@ -252,5 +252,5 @@ def update_figure(selected_fuel, start_date, end_date):
 
 
 if __name__ == '__main__':
-    app.run_server(debug=True, host='127.0.0.1', port=3001)
+    app.run_server(debug=True, host='0.0.0.0', port=8080)
 
